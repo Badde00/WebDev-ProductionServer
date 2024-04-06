@@ -1,0 +1,43 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+header h1 {
+  margin: 0;
+  padding: 20px;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.mainContentContainer {
+  flex: 1;
+  display: flex;
+}
+
+aside {
+  width: 20%;
+  height: 100vh;
+  background-color: #ddd;
+  padding: 20px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  overflow-y: auto;
+}
+
+main {
+  flex: 1;
+  padding: 0 20px 20px 20px;
+  margin-right: 25%;
+}
+
+footer {
+  background-color: #f4f4f4;
+  padding: 10px 0 0 0;
+  text-align: center;
+}

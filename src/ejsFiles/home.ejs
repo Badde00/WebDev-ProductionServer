@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Gitlab Issues</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <!-- I had problems with the website not finding the icon, so I made a hard-coded path to it -->
+  <% let href = process.cwd() + '\\src\\img\\gitLabLogo.ico' %>
+  <link rel="icon" href="<%= href %>">
+  <!-- <link rel="icon" href="src/img/gitLabLogo.ico"> -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io()
+    socket.on('update', (issues) => {
+      console.log('socket update event received!')
+
+      if (!Array.isArray(issues)) {
+        console.error('Issues is not an array')
+        return
+      }
+      const issuesContainer = document.getElementById('issues')
+      issuesContainer.innerHTML = ''
+      let newContent = '<ul>'
+
+      issues.forEach(issue => {
+        newContent += `
+          <li>
+            <h3>Title: ${issue.title}</h3>
+            <p><b>State:</b> ${issue.state}</p>
+            <p><b>Description:</b> ${issue.description}</p>
+            <p><b>Created at:</b> ${issue.created_at}</p>
+            <p><b>Updated at:</b> ${issue.updated_at}</p>
+            <p><b>Closed at:</b> ${issue.closed_at === null ? 'null' : issue.closed_at}</p>
+            <p><b>Author name:</b> ${issue.author.username}</p>
+          </li>
+        `
+      })
+      newContent += '</ul>'
+      issuesContainer.innerHTML = newContent
+    })
+  </script>
+</head>
+
+<body id="main">
+  <header>
+    <h1>Gitlab Issues</h1>
+  </header>
+
+  <div class="mainContentContainer">
+    <aside>
+      <h2>About the latest issue-creator</h2>
+      <div class="profile">
+        <% if (issues.length > 0) { %>
+          <% let latestAuthor = issues[issues.length - 1].author %>
+          <img src="<%= latestAuthor.avatar_url %>" alt="avatar">
+          <p>Username: <%= latestAuthor.username %></p>
+          <p>Name: <%= latestAuthor.name %></p>
+          <p>Web URL: <a href="<%= latestAuthor.web_url %>"><%= latestAuthor.web_url %></a></p>
+
+        <% } else { %>
+          <p>No issues found</p>
+        <% } %>
+
+      </div>
+    </aside>
+
+    <main>
+      <h2>Issues</h2>
+      <div id="issues">
+        <ul>
+          <% issues.forEach(issue => { %>
+            <li>
+              <h3>Title: <%= issue.title %></h3>
+              <p><b>State:</b> <%= issue.state %></p>
+              <p><b>Description:</b> <%= issue.description %></p>
+              <p><b>Created at:</b> <%= issue.created_at %></p>
+              <p><b>Updated at:</b> <%= issue.updated_at %></p>
+              <p><b>Closed at:</b> <%= issue.closed_at === null ? 'null' : issue.closed_at %></p>
+              <p><b>Author name:</b> <%= issue.author.username %></p>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <p>Something exciting</p>
+  </footer>
+  
+
+</body>
+
+</html>
