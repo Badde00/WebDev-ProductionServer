@@ -1,0 +1,26 @@
+FROM node:18
+
+# Create a non-root user
+# RUN groupadd -r node && useradd -r -g node -G audio,video node \
+#    && mkdir -p /home/node \
+#    && chown -R node:node /home/node \
+#    && chown -R node:node /usr/src/app
+
+RUN mkdir -p /home/node /app \
+    && chown -R node:node /home/node \
+    && chown -R node:node /app
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the working directory
+COPY --chown=node:node package*.json ./
+
+# Switch to the non-root user
+USER node
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code to the working directory
+COPY --chown=node:node . .
